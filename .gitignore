@@ -1,0 +1,25 @@
+# Terraform state — contains sensitive data, never commit
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+
+# Terraform working directory
+.terraform/
+.terraform.lock.hcl
+
+# Variable files with real values (commit .example versions only)
+*.tfvars
+!*.tfvars.example
+
+# Crash logs
+crash.log
+crash.*.log
+
+# Override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Plan output files (commit only in CI artifacts, not repo)
+*.tfplan

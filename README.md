@@ -35,6 +35,61 @@ Each section follows a consistent rhythm:
 ---
 
 ## 🗂️ Repository structure
+
+    terraforge/
+    │
+    ├── 📁 01-foundations/              # Phase 1 — IaC concepts, setup, HCL, core workflow
+    │   ├── 01-iac-concepts/            #   What is IaC? Why Terraform?
+    │   ├── 02-install-and-setup/       #   Terraform CLI + Azure CLI + provider auth
+    │   ├── 03-core-workflow/           #   init → plan → apply → destroy
+    │   │   ├── examples/               #   3 guided examples
+    │   │   └── project-01-resource-group/   ← 🚀 First real project
+    │   └── 04-hcl-basics/              #   Blocks, arguments, expressions, types
+    │
+    ├── 📁 02-core-config/              # Phase 2 — Variables, outputs, locals, data sources
+    │   ├── 01-variables/
+    │   ├── 02-outputs/
+    │   ├── 03-locals/
+    │   ├── 04-data-sources/
+    │   ├── 05-dependency-graph/
+    │   └── project-02-storage-account/     ← 🚀 Azure Storage Account
+    │
+    ├── 📁 03-state-management/         # Phase 3 — State internals, remote backends, import
+    │   ├── 01-state-internals/
+    │   ├── 02-remote-backends/
+    │   ├── 03-state-commands/
+    │   ├── 04-import/
+    │   └── project-03-remote-state/         ← 🚀 Azure Blob remote backend
+    │
+    ├── 📁 04-modules/                  # Phase 4 — Modules, Registry, meta-arguments
+    │   ├── 01-module-basics/
+    │   ├── 02-writing-modules/
+    │   ├── 03-registry-modules/
+    │   ├── 04-meta-arguments/
+    │   ├── modules/                    #   Reusable modules library
+    │   │   ├── azure-resource-group/
+    │   │   ├── azure-storage-account/
+    │   │   └── azure-app-service/
+    │   └── project-04-webapp-module/        ← 🚀 Azure App Service via module
+    │
+    ├── 📁 05-advanced/                 # Phase 5 — Workspaces, functions, provisioners, testing
+    │   ├── 01-workspaces/
+    │   ├── 02-functions/
+    │   ├── 03-provisioners/
+    │   ├── 04-testing/
+    │   └── project-05-multi-env/            ← 🚀 Dev/prod workspace setup
+    │
+    ├── 📁 06-production/               # Phase 6 — Best practices, security, CI/CD, Terraform Cloud
+    │   ├── 01-best-practices/
+    │   ├── 02-security/
+    │   ├── 03-cicd-github-actions/
+    │   ├── 04-terraform-cloud/
+    │   └── project-06-capstone/             ← 🏆 Full Azure stack + GitHub Actions pipeline
+    │
+    ├── 📄 .gitignore                   # Excludes .tfstate, .terraform/, secrets
+    ├── 📄 .terraform-version           # Pins Terraform version via tfenv
+    └── 📄 CONVENTIONS.md               # Naming rules, tagging policy, git workflow
+
 ---
 
 ## 🗺️ Learning roadmap
@@ -206,11 +261,25 @@ All projects in this repo use **Microsoft Azure** on the free tier.
 ---
 
 ## 🔐 Security practices in this repo
+
+    ✅  .tfstate files are gitignored — never committed
+    ✅  .tfvars files are gitignored — only .tfvars.example is committed
+    ✅  .terraform/ directory is gitignored
+    ✅  Secrets use environment variables or Azure Key Vault, never hardcoded
+    ✅  Service principal credentials are stored in GitHub Secrets (Phase 6)
+
 ---
 
 ## 📝 Git conventions
 
 Commit messages follow this pattern:
+
+    feat(phase1):    Add example-01 hello azure
+    feat(phase2):    Complete project-02 storage account
+    docs(phase1):    Fill in README for core-workflow section
+    fix(phase3):     Correct backend config in remote-state project
+    chore:           Update .gitignore for crash logs
+
 ---
 
 ## 📚 Key references

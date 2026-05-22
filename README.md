@@ -36,7 +36,7 @@ Each section follows a consistent rhythm:
 
 ## 🗂️ Repository structure
 
-```
+\`\`\`
 terraforge/
 │
 ├── 📁 01-foundations/              # Phase 1 — IaC concepts, setup, HCL, core workflow
@@ -90,7 +90,7 @@ terraforge/
 ├── 📄 .gitignore                   # Excludes .tfstate, .terraform/, secrets
 ├── 📄 .terraform-version           # Pins Terraform version via tfenv
 └── 📄 CONVENTIONS.md               # Naming rules, tagging policy, git workflow
-```
+\`\`\`
 
 ---
 
@@ -115,39 +115,102 @@ Before starting, make sure you have these installed and configured:
 
 ### Required tools
 
-| Tool | Purpose | Install |
+| Tool | Purpose | Version |
 |------|---------|---------|
-| [Terraform CLI](https://developer.hashicorp.com/terraform/install) `≥ 1.7` | Core IaC tool | `brew install terraform` / [direct download](https://developer.hashicorp.com/terraform/install) |
-| [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) | Authenticate with Azure | `brew install azure-cli` |
-| [Git](https://git-scm.com/) | Version control | `brew install git` |
-| [VS Code](https://code.visualstudio.com/) | Editor | + HashiCorp Terraform extension |
+| [Terraform CLI](https://developer.hashicorp.com/terraform/install) | Core IaC tool | \`≥ 1.7\` |
+| [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux) | Authenticate with Azure | latest |
+| [Git](https://git-scm.com/) | Version control | latest |
+| [VS Code](https://code.visualstudio.com/) | Editor | latest |
+| [tfenv](https://github.com/tfutils/tfenv) *(optional but recommended)* | Manage multiple Terraform versions | latest |
+
+### Installation — Arch Linux
+
+\`\`\`bash
+# ── System update (always do this first on Arch) ──────────────────────────
+sudo pacman -Syu
+
+# ── Git ───────────────────────────────────────────────────────────────────
+sudo pacman -S git
+
+# ── Terraform (via official Arch package) ─────────────────────────────────
+sudo pacman -S terraform
+
+# Verify
+terraform -v
+
+# ── OR: install tfenv to manage multiple Terraform versions (recommended) ─
+# tfenv lets you switch versions per project via .terraform-version file
+yay -S tfenv                        # requires an AUR helper (yay or paru)
+tfenv install 1.7.0
+tfenv use 1.7.0
+terraform -v                        # should show 1.7.0
+
+# ── Azure CLI ─────────────────────────────────────────────────────────────
+# Option 1: AUR (easiest, always up to date)
+yay -S azure-cli
+
+# Option 2: pip install into isolated environment (no AUR needed)
+sudo pacman -S python-pip
+pip install azure-cli --user
+
+# Verify
+az --version
+
+# ── VS Code ───────────────────────────────────────────────────────────────
+# Open-source build (code-oss) — available in official repos
+sudo pacman -S code
+
+# OR: Microsoft's official binary with full marketplace access (via AUR)
+yay -S visual-studio-code-bin
+
+# ── AUR helper — install yay if you don't have one already ────────────────
+sudo pacman -S --needed base-devel
+git clone https://aur.archlinux.org/yay.git /tmp/yay
+cd /tmp/yay && makepkg -si && cd -
+\`\`\`
+
+> 💡 **Arch tip:** Terraform is in the official \`extra\` repository — \`sudo pacman -S terraform\` is the cleanest install. Use \`tfenv\` from the AUR if you need to switch versions between projects.
 
 ### Recommended VS Code extensions
 
-```
-HashiCorp Terraform       (hashicorp.terraform)
-Azure Terraform           (ms-azuretools.vscode-azureterraform)
-GitLens                   (eamodio.gitlens)
-```
+\`\`\`bash
+code --install-extension hashicorp.terraform
+code --install-extension ms-azuretools.vscode-azureterraform
+code --install-extension eamodio.gitlens
+code --install-extension mhutchie.git-graph
+\`\`\`
+
+| Extension | ID | Purpose |
+|-----------|-----|---------|
+| HashiCorp Terraform | \`hashicorp.terraform\` | Syntax highlighting, autocomplete, fmt on save |
+| Azure Terraform | \`ms-azuretools.vscode-azureterraform\` | Azure-specific resource snippets |
+| GitLens | \`eamodio.gitlens\` | Git blame, history, diff in editor |
+| Git Graph | \`mhutchie.git-graph\` | Visual branch and commit graph |
 
 ### Azure account setup
 
-```bash
-# Log in to Azure
+\`\`\`bash
+# Log in to Azure (opens browser for auth)
 az login
 
-# Verify your subscription is active
+# Verify your active subscription
 az account show
 
-# Set a default subscription (if you have multiple)
-az account set --subscription "YOUR_SUBSCRIPTION_NAME"
-```
+# List all subscriptions (if you have multiple)
+az account list --output table
+
+# Set a specific subscription as default
+az account set --subscription "YOUR_SUBSCRIPTION_NAME_OR_ID"
+
+# Confirm the right subscription is active
+az account show --query "{name:name, id:id, state:state}" --output table
+\`\`\`
 
 ---
 
 ## ⚡ Quick start
 
-```bash
+\`\`\`bash
 # Clone the repository
 git clone https://github.com/YOUR_USERNAME/terraforge.git
 cd terraforge
@@ -159,13 +222,13 @@ terraform -v
 cd 01-foundations/03-core-workflow/examples/example-01-hello-azure
 
 # Follow the README.md inside that folder
-```
+\`\`\`
 
 ---
 
 ## 📐 How each section is structured
 
-Every topic folder contains a `README.md` with these sections:
+Every topic folder contains a \`README.md\` with these sections:
 
 | Section | Contents |
 |---------|----------|
@@ -197,19 +260,19 @@ All projects in this repo use **Microsoft Azure** on the free tier.
 | Key Vault | 10k operations/month free | Phase 6 |
 | Virtual Networks | Always free to create | Phase 4+ |
 
-> ⚠️ **Important:** Always run `terraform destroy` at the end of each exercise to avoid any accidental charges. Every section README reminds you of this.
+> ⚠️ **Important:** Always run \`terraform destroy\` at the end of each exercise to avoid accidental charges. Every section README reminds you of this.
 
 ---
 
 ## 🔐 Security practices in this repo
 
-```
+\`\`\`
 ✅  .tfstate files are gitignored — never committed
 ✅  .tfvars files are gitignored — only .tfvars.example is committed
 ✅  .terraform/ directory is gitignored
 ✅  Secrets use environment variables or Azure Key Vault, never hardcoded
 ✅  Service principal credentials are stored in GitHub Secrets (Phase 6)
-```
+\`\`\`
 
 ---
 
@@ -217,13 +280,13 @@ All projects in this repo use **Microsoft Azure** on the free tier.
 
 Commit messages follow this pattern:
 
-```
+\`\`\`
 feat(phase1):    Add example-01 hello azure
 feat(phase2):    Complete project-02 storage account
 docs(phase1):    Fill in README for core-workflow section
 fix(phase3):     Correct backend config in remote-state project
 chore:           Update .gitignore for crash logs
-```
+\`\`\`
 
 ---
 
@@ -245,6 +308,6 @@ MIT — feel free to fork, adapt, and build on this for your own learning.
 
 <div align="center">
 
-Built with patience, one `terraform apply` at a time. 🔨
+Built with patience, one \`terraform apply\` at a time. 🔨
 
 </div>

@@ -35,63 +35,6 @@ Each section follows a consistent rhythm:
 ---
 
 ## 🗂️ Repository structure
-
-\`\`\`
-terraforge/
-│
-├── 📁 01-foundations/              # Phase 1 — IaC concepts, setup, HCL, core workflow
-│   ├── 01-iac-concepts/            #   What is IaC? Why Terraform?
-│   ├── 02-install-and-setup/       #   Terraform CLI + Azure CLI + provider auth
-│   ├── 03-core-workflow/           #   init → plan → apply → destroy
-│   │   ├── examples/               #   3 guided examples
-│   │   └── project-01-resource-group/  ← 🚀 First real project
-│   └── 04-hcl-basics/              #   Blocks, arguments, expressions, types
-│
-├── 📁 02-core-config/              # Phase 2 — Variables, outputs, locals, data sources
-│   ├── 01-variables/
-│   ├── 02-outputs/
-│   ├── 03-locals/
-│   ├── 04-data-sources/
-│   ├── 05-dependency-graph/
-│   └── project-02-storage-account/    ← 🚀 Azure Storage Account
-│
-├── 📁 03-state-management/         # Phase 3 — State internals, remote backends, import
-│   ├── 01-state-internals/
-│   ├── 02-remote-backends/
-│   ├── 03-state-commands/
-│   ├── 04-import/
-│   └── project-03-remote-state/        ← 🚀 Azure Blob remote backend
-│
-├── 📁 04-modules/                  # Phase 4 — Modules, Registry, meta-arguments
-│   ├── 01-module-basics/
-│   ├── 02-writing-modules/
-│   ├── 03-registry-modules/
-│   ├── 04-meta-arguments/
-│   ├── modules/                    #   Reusable modules library
-│   │   ├── azure-resource-group/
-│   │   ├── azure-storage-account/
-│   │   └── azure-app-service/
-│   └── project-04-webapp-module/       ← 🚀 Azure App Service via module
-│
-├── 📁 05-advanced/                 # Phase 5 — Workspaces, functions, provisioners, testing
-│   ├── 01-workspaces/
-│   ├── 02-functions/
-│   ├── 03-provisioners/
-│   ├── 04-testing/
-│   └── project-05-multi-env/           ← 🚀 Dev/prod workspace setup
-│
-├── 📁 06-production/               # Phase 6 — Best practices, security, CI/CD, Terraform Cloud
-│   ├── 01-best-practices/
-│   ├── 02-security/
-│   ├── 03-cicd-github-actions/
-│   ├── 04-terraform-cloud/
-│   └── project-06-capstone/            ← 🏆 Full Azure stack + GitHub Actions pipeline
-│
-├── 📄 .gitignore                   # Excludes .tfstate, .terraform/, secrets
-├── 📄 .terraform-version           # Pins Terraform version via tfenv
-└── 📄 CONVENTIONS.md               # Naming rules, tagging policy, git workflow
-\`\`\`
-
 ---
 
 ## 🗺️ Learning roadmap
@@ -117,7 +60,7 @@ Before starting, make sure you have these installed and configured:
 
 | Tool | Purpose | Version |
 |------|---------|---------|
-| [Terraform CLI](https://developer.hashicorp.com/terraform/install) | Core IaC tool | \`≥ 1.7\` |
+| [Terraform CLI](https://developer.hashicorp.com/terraform/install) | Core IaC tool | >= 1.7 |
 | [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux) | Authenticate with Azure | latest |
 | [Git](https://git-scm.com/) | Version control | latest |
 | [VS Code](https://code.visualstudio.com/) | Editor | latest |
@@ -125,31 +68,31 @@ Before starting, make sure you have these installed and configured:
 
 ### Installation — Arch Linux
 
-\`\`\`bash
+```bash
 # ── System update (always do this first on Arch) ──────────────────────────
 sudo pacman -Syu
 
 # ── Git ───────────────────────────────────────────────────────────────────
 sudo pacman -S git
 
-# ── Terraform (via official Arch package) ─────────────────────────────────
+# ── Terraform (via official Arch extra repository) ────────────────────────
 sudo pacman -S terraform
 
 # Verify
 terraform -v
 
-# ── OR: install tfenv to manage multiple Terraform versions (recommended) ─
-# tfenv lets you switch versions per project via .terraform-version file
-yay -S tfenv                        # requires an AUR helper (yay or paru)
+# ── OR: tfenv — manage multiple Terraform versions (recommended) ──────────
+# Lets you switch versions per project via the .terraform-version file
+yay -S tfenv
 tfenv install 1.7.0
 tfenv use 1.7.0
-terraform -v                        # should show 1.7.0
+terraform -v
 
 # ── Azure CLI ─────────────────────────────────────────────────────────────
-# Option 1: AUR (easiest, always up to date)
+# Option 1: AUR (easiest, stays up to date)
 yay -S azure-cli
 
-# Option 2: pip install into isolated environment (no AUR needed)
+# Option 2: pip install (no AUR helper needed)
 sudo pacman -S python-pip
 pip install azure-cli --user
 
@@ -157,46 +100,46 @@ pip install azure-cli --user
 az --version
 
 # ── VS Code ───────────────────────────────────────────────────────────────
-# Open-source build (code-oss) — available in official repos
+# Open-source build — official Arch repos
 sudo pacman -S code
 
-# OR: Microsoft's official binary with full marketplace access (via AUR)
+# OR: Microsoft binary with full marketplace access (AUR)
 yay -S visual-studio-code-bin
 
-# ── AUR helper — install yay if you don't have one already ────────────────
+# ── Install yay AUR helper if you don't have one ─────────────────────────
 sudo pacman -S --needed base-devel
 git clone https://aur.archlinux.org/yay.git /tmp/yay
 cd /tmp/yay && makepkg -si && cd -
-\`\`\`
+```
 
-> 💡 **Arch tip:** Terraform is in the official \`extra\` repository — \`sudo pacman -S terraform\` is the cleanest install. Use \`tfenv\` from the AUR if you need to switch versions between projects.
+> 💡 **Arch tip:** Terraform lives in the official `extra` repository so `sudo pacman -S terraform` is the cleanest path. Use `tfenv` from the AUR only if you need to juggle multiple versions across projects.
 
 ### Recommended VS Code extensions
 
-\`\`\`bash
+```bash
 code --install-extension hashicorp.terraform
 code --install-extension ms-azuretools.vscode-azureterraform
 code --install-extension eamodio.gitlens
 code --install-extension mhutchie.git-graph
-\`\`\`
+```
 
 | Extension | ID | Purpose |
 |-----------|-----|---------|
-| HashiCorp Terraform | \`hashicorp.terraform\` | Syntax highlighting, autocomplete, fmt on save |
-| Azure Terraform | \`ms-azuretools.vscode-azureterraform\` | Azure-specific resource snippets |
-| GitLens | \`eamodio.gitlens\` | Git blame, history, diff in editor |
-| Git Graph | \`mhutchie.git-graph\` | Visual branch and commit graph |
+| HashiCorp Terraform | `hashicorp.terraform` | Syntax highlighting, autocomplete, fmt on save |
+| Azure Terraform | `ms-azuretools.vscode-azureterraform` | Azure-specific resource snippets |
+| GitLens | `eamodio.gitlens` | Git blame, history, diff in editor |
+| Git Graph | `mhutchie.git-graph` | Visual branch and commit graph |
 
 ### Azure account setup
 
-\`\`\`bash
+```bash
 # Log in to Azure (opens browser for auth)
 az login
 
 # Verify your active subscription
 az account show
 
-# List all subscriptions (if you have multiple)
+# List all subscriptions if you have multiple
 az account list --output table
 
 # Set a specific subscription as default
@@ -204,13 +147,13 @@ az account set --subscription "YOUR_SUBSCRIPTION_NAME_OR_ID"
 
 # Confirm the right subscription is active
 az account show --query "{name:name, id:id, state:state}" --output table
-\`\`\`
+```
 
 ---
 
 ## ⚡ Quick start
 
-\`\`\`bash
+```bash
 # Clone the repository
 git clone https://github.com/YOUR_USERNAME/terraforge.git
 cd terraforge
@@ -220,15 +163,13 @@ terraform -v
 
 # Navigate to the first section and begin
 cd 01-foundations/03-core-workflow/examples/example-01-hello-azure
-
-# Follow the README.md inside that folder
-\`\`\`
+```
 
 ---
 
 ## 📐 How each section is structured
 
-Every topic folder contains a \`README.md\` with these sections:
+Every topic folder contains a `README.md` with these sections:
 
 | Section | Contents |
 |---------|----------|
@@ -260,34 +201,16 @@ All projects in this repo use **Microsoft Azure** on the free tier.
 | Key Vault | 10k operations/month free | Phase 6 |
 | Virtual Networks | Always free to create | Phase 4+ |
 
-> ⚠️ **Important:** Always run \`terraform destroy\` at the end of each exercise to avoid accidental charges. Every section README reminds you of this.
+> ⚠️ **Important:** Always run `terraform destroy` at the end of each exercise to avoid accidental charges. Every section README reminds you of this.
 
 ---
 
 ## 🔐 Security practices in this repo
-
-\`\`\`
-✅  .tfstate files are gitignored — never committed
-✅  .tfvars files are gitignored — only .tfvars.example is committed
-✅  .terraform/ directory is gitignored
-✅  Secrets use environment variables or Azure Key Vault, never hardcoded
-✅  Service principal credentials are stored in GitHub Secrets (Phase 6)
-\`\`\`
-
 ---
 
 ## 📝 Git conventions
 
 Commit messages follow this pattern:
-
-\`\`\`
-feat(phase1):    Add example-01 hello azure
-feat(phase2):    Complete project-02 storage account
-docs(phase1):    Fill in README for core-workflow section
-fix(phase3):     Correct backend config in remote-state project
-chore:           Update .gitignore for crash logs
-\`\`\`
-
 ---
 
 ## 📚 Key references
@@ -308,6 +231,6 @@ MIT — feel free to fork, adapt, and build on this for your own learning.
 
 <div align="center">
 
-Built with patience, one \`terraform apply\` at a time. 🔨
+Built with patience, one `terraform apply` at a time. 🔨
 
 </div>
